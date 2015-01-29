@@ -7,16 +7,15 @@ var CommentBox = React.createClass({
     },
     //called after rendered
     componentDidMount: function() {
-        var self = this;
         $.ajax({
-            url: self.props.url,
+            url: this.props.url,
             dataType: 'json',
             success: function(data) {
-                self.setState({data: data});
-            },
+                this.setState({data: data});
+            }.bind(this),
             error: function(xhr, status, err) {
-                console.log(error, self.props.url, status, err.toString());
-            }.bind(self)
+                console.log(error, this.props.url, status, err.toString());
+            }.bind(this)
         });
     },
     render: function() {
