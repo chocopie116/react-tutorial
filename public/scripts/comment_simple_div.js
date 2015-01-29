@@ -24,12 +24,13 @@ var CommentList = React.createClass({
 
 var Comment = React.createClass({
     render: function() {
+        var rawMarkup = converter.makeHtml(this.props.children.toString());
         return (
             <div className="commentAuthor">
                 <h2 className="commentAuthor">
                 {this.props.author}
                 </h2>
-                {converter.makeHtml(this.props.children.toString())}
+                <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
             </div>
         );
     }
