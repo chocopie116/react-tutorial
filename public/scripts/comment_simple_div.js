@@ -1,11 +1,17 @@
 var converter = new Showdown.converter();
 
+//assume completed getting from server and parsing
+var parsedDataFromServer = [
+    {author: "John", text: "John comment"},
+    {author: "Mike", text: "Mike comment"},
+];
+
 var CommentBox = React.createClass({
     render: function() {
         return (
             <div className="commentBox">
                 <h1>these are comments</h1>
-                <CommentList />
+                <CommentList data={this.props.data} />
                 <CommentForm />
             </div>
         );
@@ -13,10 +19,17 @@ var CommentBox = React.createClass({
 });
 var CommentList = React.createClass({
     render: function() {
+
+        //make Comment{React.Element} Array
+        var commentNodes = this.props.data.map(function(comment) {
+            return (
+                <Comment author={comment.author}>{comment.text}</Comment>
+            );
+        });
+
         return (
             <div className="commentList">
-                <Comment author="John">John comment</Comment>
-                <Comment author="Mike">Mike comment</Comment>
+                {commentNodes}
             </div>
         );
     }
@@ -47,6 +60,6 @@ var CommentForm = React.createClass({
 });
 
 React.render(
-    <CommentBox />,
+    <CommentBox data={parsedDataFromServer} />,
     document.getElementById('content')
 );
