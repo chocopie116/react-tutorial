@@ -1,17 +1,29 @@
 var converter = new Showdown.converter();
 
-//assume completed getting from server and parsing
-var parsedDataFromServer = [
-    {author: "John", text: "John comment"},
-    {author: "Mike", text: "Mike comment"},
-];
-
 var CommentBox = React.createClass({
+    //called once
+    getInitialState: function() {
+        return {data: []};
+    },
+    //called after rendered
+    componentDidMount: function() {
+        var self = this;
+        $.ajax({
+            url: self.props.url,
+            dataType: 'json',
+            success: function(data) {
+                self.setState({data: data});
+            },
+            error: function(xhr, status, err) {
+                console.log(error, self.props.url, status, err.toString());
+            }.bind(self)
+        });
+    },
     render: function() {
         return (
             <div className="commentBox">
                 <h1>these are comments</h1>
-                <CommentList data={this.props.data} />
+                <CommentList data={this.state.data} />
                 <CommentForm />
             </div>
         );
@@ -19,7 +31,6 @@ var CommentBox = React.createClass({
 });
 var CommentList = React.createClass({
     render: function() {
-
         //make Comment{React.Element} Array
         var commentNodes = this.props.data.map(function(comment) {
             return (
@@ -60,6 +71,6 @@ var CommentForm = React.createClass({
 });
 
 React.render(
-    <CommentBox data={parsedDataFromServer} />,
+    <CommentBox url="comments.json" />,
     document.getElementById('content')
 );
